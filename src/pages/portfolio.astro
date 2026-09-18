@@ -1,0 +1,245 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { projects } from '../data/projects';
+---
+
+<BaseLayout title="Portofolio — Akim" description="Project log Akim. Personal website, trading experiment, dan catatan kuliah.">
+  <div class="container">
+    <header class="page-header">
+      <p class="page-label">Project Log</p>
+      <h1>Yang sedang gue kerjakan</h1>
+      <p class="page-lead">
+        Proyek pribadi, eksperimen, dan catatan yang gue bangun sambil belajar.
+      </p>
+    </header>
+
+    <section class="project-list">
+      {projects.map((project, i) => (
+        <article class="project">
+          <div class="project-number">{String(i + 1).padStart(2, '0')}</div>
+          <div class="project-body">
+            <div class="project-head">
+              <div class="project-title-block">
+                <span class="project-category">{project.category}</span>
+                <h2>{project.name}</h2>
+              </div>
+              <span class={`status status-${project.status.toLowerCase().replace(' ', '-')}`}>
+                {project.status}
+              </span>
+            </div>
+
+            <p class="project-desc">{project.description}</p>
+
+            <div class="project-meta">
+              <div class="meta-block">
+                <span class="meta-label">Tentang</span>
+                <p class="meta-value">{project.why}</p>
+              </div>
+              <div class="meta-block">
+                <span class="meta-label">Yang gue pelajari</span>
+                <p class="meta-value">{project.learned.join(' · ')}</p>
+              </div>
+            </div>
+
+            <div class="project-tags">
+              {project.tech.map((t) => <span class="tag">{t}</span>)}
+            </div>
+
+            {(project.github || project.demo) && (
+              <div class="project-links">
+                {project.github && (
+                  <a href={project.github} target="_blank" rel="noopener">GitHub →</a>
+                )}
+                {project.demo && (
+                  <a href={project.demo} target="_blank" rel="noopener">Live Demo →</a>
+                )}
+              </div>
+            )}
+          </div>
+        </article>
+      ))}
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: var(--space-12);
+    max-width: 640px;
+  }
+  .page-label {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-3);
+    font-weight: 600;
+  }
+  .page-header h1 {
+    font-size: 2.25rem;
+    margin-bottom: var(--space-3);
+  }
+  .page-lead {
+    font-size: 1.0625rem;
+    color: var(--text-tertiary);
+    margin: 0;
+    line-height: 1.7;
+  }
+
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .project {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: var(--space-6);
+    padding: var(--space-8) 0;
+    border-bottom: 1px solid var(--border-subtle);
+    transition: padding 0.2s ease;
+  }
+  .project:hover { padding-left: var(--space-3); }
+  .project:hover .project-number { color: var(--accent); }
+
+  .project-number {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--text-quaternary);
+    font-weight: 500;
+    padding-top: 4px;
+    transition: color 0.2s ease;
+  }
+  .project-body { min-width: 0; }
+
+  .project-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+  .project-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+  .project-category {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .project h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .status {
+    font-size: 0.6875rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .status-live {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--positive);
+  }
+  .status-in-progress {
+    background: rgba(79, 139, 255, 0.1);
+    color: var(--accent);
+  }
+  .status-ongoing {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning);
+  }
+
+  .project-desc {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-6);
+  }
+
+  .project-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+    margin-bottom: var(--space-5);
+  }
+  .meta-block {
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--border-default);
+  }
+  .meta-label {
+    display: block;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-1);
+    font-weight: 500;
+  }
+  .meta-value {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .project-tags {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-4);
+  }
+  .tag {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.625rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+  }
+
+  .project-links {
+    display: flex;
+    gap: var(--space-4);
+    font-size: 0.8125rem;
+  }
+  .project-links a {
+    color: var(--text-tertiary);
+  }
+  .project-links a:hover { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    .project {
+      grid-template-columns: 40px 1fr;
+      gap: var(--space-3);
+      padding: var(--space-6) 0;
+    }
+    .project-number { font-size: 0.75rem; }
+    .project-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+    .project-meta {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+    .project h2 { font-size: 1.125rem; }
+  }
+</style>

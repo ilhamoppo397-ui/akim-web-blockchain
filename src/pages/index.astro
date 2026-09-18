@@ -1,0 +1,816 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { profile } from '../data/profile';
+import { learning } from '../data/learning';
+import { workingOn } from '../data/working-on';
+import { articles } from '../data/articles';
+---
+
+<BaseLayout title="Akim — Informatics Student, Crypto & Web3">
+  <div class="container">
+
+    <!-- MARKET TICKER -->
+    <div class="ticker" id="ticker">
+      <div class="ticker-label">MARKET</div>
+
+      <div class="ticker-items">
+        <div class="ticker-item" data-market-item>
+          <span class="ticker-symbol">BTC/USD</span>
+          <span class="ticker-skeleton" data-skeleton></span>
+          <span class="ticker-price" id="btc-price" hidden>—</span>
+          <span class="ticker-change" id="btc-change"></span>
+        </div>
+        <div class="ticker-item" data-market-item>
+          <span class="ticker-symbol">ETH/USD</span>
+          <span class="ticker-skeleton" data-skeleton></span>
+          <span class="ticker-price" id="eth-price" hidden>—</span>
+          <span class="ticker-change" id="eth-change"></span>
+        </div>
+        <div class="ticker-item" data-market-item>
+          <span class="ticker-symbol">SOL/USD</span>
+          <span class="ticker-skeleton" data-skeleton></span>
+          <span class="ticker-price" id="sol-price" hidden>—</span>
+          <span class="ticker-change" id="sol-change"></span>
+        </div>
+        <div class="ticker-item" data-market-item>
+          <span class="ticker-symbol">BNB/USD</span>
+          <span class="ticker-skeleton" data-skeleton></span>
+          <span class="ticker-price" id="bnb-price" hidden>—</span>
+          <span class="ticker-change" id="bnb-change"></span>
+        </div>
+      </div>
+
+      <div class="ticker-updated" id="ticker-updated"></div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero reveal">
+      <div class="hero-text">
+        <p class="hero-label">Personal Website</p>
+        <h1>Kenalin, gue {profile.name}. 👋</h1>
+        <p class="hero-tagline">
+          {profile.tagline}
+        </p>
+        <p class="hero-desc">
+          Di sini gue nulis catatan belajar, eksperimen kecil, dan opini soal
+          programming, crypto, blockchain, Web3, dan trading. Sesekali catatan
+          kuliah Informatika.
+        </p>
+        <div class="hero-cta">
+          <a href="/blog" class="btn">Baca Catatan →</a>
+          <a href="/portfolio" class="btn-secondary">Lihat Project</a>
+        </div>
+      </div>
+
+      <aside class="hero-visual" aria-hidden="true">
+        <div class="visual-card terminal-card">
+          <div class="terminal-bar">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+            <span class="terminal-title">akim@web:~</span>
+          </div>
+          <div class="terminal-body">
+            <div><span class="prompt">$</span> whoami</div>
+            <div class="output">akim — informatics student</div>
+            <div><span class="prompt">$</span> cat interests.txt</div>
+            <div class="output">code, crypto, web3, trading</div>
+            <div><span class="prompt">$</span> status</div>
+            <div class="output">learning... <span class="cursor">_</span></div>
+          </div>
+        </div>
+
+        <div class="visual-card market-card">
+          <div class="market-head">
+            <span class="market-label">MARKET</span>
+            <span class="market-status">Live</span>
+          </div>
+          <div class="market-row">
+            <span class="market-symbol">BTC/USD</span>
+            <span class="market-price" id="hero-btc-price">—</span>
+            <span class="market-change" id="hero-btc-change"></span>
+          </div>
+          <div class="market-row">
+            <span class="market-symbol">ETH/USD</span>
+            <span class="market-price" id="hero-eth-price">—</span>
+            <span class="market-change" id="hero-eth-change"></span>
+          </div>
+          <div class="market-chart">
+            <svg viewBox="0 0 200 40" preserveAspectRatio="none">
+              <polyline
+                points="0,30 20,28 40,25 60,27 80,22 100,24 120,18 140,20 160,15 180,17 200,12"
+                fill="none"
+                stroke="var(--accent)"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                opacity="0.6"
+              />
+            </svg>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- CURRENTLY LEARNING (numbered editorial) -->
+    <section class="section reveal">
+      <div class="section-head">
+        <h2>Currently Learning</h2>
+        <p class="section-sub">Yang lagi gue pelajarin</p>
+      </div>
+      <ul class="numbered-list">
+        {learning.map((item, i) => (
+          <li class="numbered-item">
+            <div class="num">{String(i + 1).padStart(2, '0')}</div>
+            <div class="num-body">
+              <span class="num-title">{item.name}</span>
+              <span class="num-note">{item.note}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- CURRENTLY WORKING ON (numbered editorial) -->
+    <section class="section reveal">
+      <div class="section-head">
+        <h2>Yang lagi gue kerjain</h2>
+        <p class="section-sub">Project dan aktivitas saat ini</p>
+      </div>
+      <ul class="numbered-list">
+        {workingOn.map((item, i) => (
+          <li class="numbered-item">
+            <div class="num">{String(i + 1).padStart(2, '0')}</div>
+            <div class="num-body">
+              <div class="num-head">
+                <span class="num-title">{item.title}</span>
+                <span class={`status status-${item.status.toLowerCase().replace(' ', '-')}`}>
+                  {item.status}
+                </span>
+              </div>
+              <span class="num-note">{item.note}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- LATEST NOTES (numbered editorial) -->
+    <section class="section reveal">
+      <div class="section-head-row">
+        <div>
+          <h2>Catatan terbaru</h2>
+          <p class="section-sub">Yang lagi gue tulis dan pelajarin</p>
+        </div>
+        <a href="/blog" class="section-link">Lihat semua →</a>
+      </div>
+
+      <div class="notes-list">
+        {articles.slice(0, 3).map((post, i) => (
+          <a href={`/posts/${post.slug}`} class="note-row">
+            <div class="note-number">{String(i + 1).padStart(2, '0')}</div>
+            <div class="note-body">
+              <div class="note-category">{post.category}</div>
+              <h3 class="note-title">{post.title}</h3>
+              <p class="note-desc">{post.description}</p>
+              <div class="note-meta">
+                <span>{post.dateLabel}</span>
+                <span class="note-dot">·</span>
+                <span>{post.readTime}</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  /* ============ MARKET TICKER ============ */
+  .ticker {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.8125rem;
+    margin-bottom: var(--space-12);
+    overflow: hidden;
+  }
+  .ticker-label {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-quaternary);
+    font-weight: 600;
+    padding-right: var(--space-4);
+    border-right: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+  }
+  .ticker-items {
+    display: flex;
+    gap: var(--space-6);
+    overflow-x: auto;
+    flex: 1;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .ticker-items::-webkit-scrollbar { display: none; }
+  .ticker-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    white-space: nowrap;
+    padding-right: var(--space-6);
+    border-right: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+  }
+  .ticker-item:last-child { border-right: none; padding-right: 0; }
+  .ticker-symbol {
+    color: var(--text-tertiary);
+    font-weight: 500;
+    font-size: 0.75rem;
+  }
+  .ticker-price {
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .ticker-price.is-loaded { opacity: 1; }
+  .ticker-change {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    min-width: 55px;
+    text-align: right;
+  }
+  .ticker-change.up { color: var(--positive); }
+  .ticker-change.down { color: var(--negative); }
+  .ticker-skeleton {
+    display: inline-block;
+    width: 60px;
+    height: 12px;
+    background: linear-gradient(90deg, var(--bg-elevated) 0%, var(--bg-hover) 50%, var(--bg-elevated) 100%);
+    background-size: 200% 100%;
+    border-radius: 3px;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+  .ticker-skeleton.is-hidden { display: none; }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  .ticker-updated {
+    font-size: 0.6875rem;
+    color: var(--text-quaternary);
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-left: var(--space-4);
+    border-left: 1px solid var(--border-subtle);
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    display: grid;
+    grid-template-columns: 55% 45%;
+    gap: var(--space-12);
+    align-items: center;
+    padding: var(--space-8) 0 var(--space-16);
+  }
+  .hero-text { max-width: 560px; }
+  .hero-label {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-4);
+    font-weight: 600;
+  }
+  .hero h1 {
+    font-size: 2.75rem;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-5);
+    font-weight: 700;
+  }
+  .hero-tagline {
+    font-size: 1.0625rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+  }
+  .hero-desc {
+    font-size: 0.9375rem;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-6);
+    line-height: 1.7;
+  }
+  .hero-cta {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  /* ============ HERO VISUAL ============ */
+  .hero-visual {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .visual-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .visual-card:hover {
+    border-color: var(--border-default);
+    transform: translateY(-2px);
+  }
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+  .terminal-title {
+    margin-left: auto;
+    font-size: 0.6875rem;
+    color: var(--text-quaternary);
+    font-family: var(--font-mono);
+  }
+  .terminal-body {
+    padding: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.9;
+    color: var(--text-secondary);
+  }
+  .prompt { color: var(--accent); margin-right: 0.4rem; }
+  .output { color: var(--text-tertiary); padding-left: 1rem; }
+  .cursor {
+    animation: blink 1s step-end infinite;
+    color: var(--text-primary);
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .market-card { padding: var(--space-4); }
+  .market-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .market-label {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-quaternary);
+    font-weight: 600;
+  }
+  .market-status {
+    font-size: 0.625rem;
+    color: var(--positive);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+  }
+  .market-status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--positive);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .market-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-2) 0;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+  .market-symbol {
+    color: var(--text-tertiary);
+    font-size: 0.75rem;
+    min-width: 70px;
+  }
+  .market-price {
+    color: var(--text-primary);
+    font-weight: 500;
+    flex: 1;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .market-change {
+    font-size: 0.75rem;
+    min-width: 60px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .market-change.up { color: var(--positive); }
+  .market-change.down { color: var(--negative); }
+  .market-chart {
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border-subtle);
+    height: 40px;
+  }
+  .market-chart svg { width: 100%; height: 100%; }
+
+  /* ============ SECTIONS ============ */
+  .section {
+    margin-top: var(--space-16);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--border-subtle);
+  }
+  .section-head { margin-bottom: var(--space-6); }
+  .section-head h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 var(--space-1) 0;
+  }
+  .section-sub {
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    margin: 0;
+  }
+  .section-head-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-8);
+    gap: var(--space-4);
+  }
+  .section-head-row h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 var(--space-1) 0;
+  }
+  .section-link {
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+  }
+  .section-link:hover { color: var(--accent); }
+
+  /* ============ NUMBERED LIST (shared) ============ */
+  .numbered-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .numbered-item {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: var(--space-6);
+    padding: var(--space-5) 0;
+    border-bottom: 1px solid var(--border-subtle);
+    transition: padding 0.2s ease;
+  }
+  .numbered-item:hover {
+    padding-left: var(--space-3);
+  }
+  .numbered-item:hover .num {
+    color: var(--accent);
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--text-quaternary);
+    font-weight: 500;
+    padding-top: 2px;
+    transition: color 0.2s ease;
+  }
+
+  .num-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+  .num-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .num-title {
+    color: var(--text-primary);
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+  .num-note {
+    color: var(--text-tertiary);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  .status {
+    font-size: 0.6875rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .status-in-progress {
+    background: rgba(79, 139, 255, 0.1);
+    color: var(--accent);
+  }
+  .status-learning {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning);
+  }
+  .status-completed {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--positive);
+  }
+
+  /* ============ LATEST NOTES (numbered editorial) ============ */
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .note-row {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: var(--space-6);
+    padding: var(--space-6) 0;
+    border-bottom: 1px solid var(--border-subtle);
+    text-decoration: none;
+    color: inherit;
+    transition: padding 0.2s ease;
+  }
+  .note-row:hover {
+    padding-left: var(--space-3);
+    text-decoration: none;
+  }
+  .note-row:hover .note-title { color: var(--accent); }
+  .note-row:hover .note-number { color: var(--accent); }
+
+  .note-number {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--text-quaternary);
+    font-weight: 500;
+    padding-top: 2px;
+    transition: color 0.2s ease;
+  }
+  .note-body { min-width: 0; }
+  .note-category {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+  }
+  .note-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2) 0;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    transition: color 0.2s ease;
+  }
+  .note-desc {
+    font-size: 0.9375rem;
+    color: var(--text-tertiary);
+    margin: 0 0 var(--space-3) 0;
+    line-height: 1.6;
+  }
+  .note-meta {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-quaternary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .note-dot { color: var(--text-quaternary); }
+
+  /* ============ REVEAL ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .hero {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+    .hero-text { max-width: none; }
+    .hero-visual { max-width: 480px; }
+  }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.75rem; }
+    .hero-tagline { font-size: 1rem; }
+    .working-head { flex-direction: column; align-items: flex-start; gap: var(--space-1); }
+    .hero-visual { max-width: none; }
+    .terminal-body { font-size: 0.6875rem; }
+
+    .ticker {
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+    .ticker-label { padding-right: var(--space-3); }
+    .ticker-updated { display: none; }
+    .ticker-item { padding-right: var(--space-4); }
+
+    .note-row,
+    .numbered-item {
+      grid-template-columns: 40px 1fr;
+      gap: var(--space-3);
+      padding: var(--space-5) 0;
+    }
+    .note-number,
+    .num { font-size: 0.75rem; }
+    .note-title { font-size: 1rem; }
+    .note-desc { font-size: 0.875rem; }
+
+    .num-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+  }
+</style>
+
+<script>
+  const API = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin&vs_currencies=usd&include_24hr_change=true';
+  const REFRESH_INTERVAL = 30000;
+  let lastUpdated = null;
+  let retryCount = 0;
+
+  function fmtPrice(n, decimals) {
+    if (!isFinite(n)) return '—';
+    return '$' + n.toLocaleString('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
+  }
+
+  function hideSkeleton(item) {
+    const skel = item.querySelector('[data-skeleton]');
+    if (skel) skel.classList.add('is-hidden');
+  }
+
+  function setUnavailable() {
+    document.querySelectorAll('[data-market-item]').forEach((item) => hideSkeleton(item));
+    ['btc', 'eth', 'sol', 'bnb'].forEach((id) => {
+      const priceEl = document.getElementById(`${id}-price`);
+      const changeEl = document.getElementById(`${id}-change`);
+      if (priceEl) {
+        priceEl.textContent = '—';
+        priceEl.hidden = false;
+        priceEl.classList.add('is-loaded');
+      }
+      if (changeEl) {
+        changeEl.textContent = '';
+        changeEl.classList.remove('up', 'down');
+      }
+    });
+    ['hero-btc', 'hero-eth'].forEach((id) => {
+      const priceEl = document.getElementById(`${id}-price`);
+      const changeEl = document.getElementById(`${id}-change`);
+      if (priceEl) priceEl.textContent = '—';
+      if (changeEl) {
+        changeEl.textContent = '';
+        changeEl.classList.remove('up', 'down');
+      }
+    });
+    const updatedEl = document.getElementById('ticker-updated');
+    if (updatedEl) updatedEl.textContent = 'Harga lagi ga bisa diambil.';
+  }
+
+  function updateTimestamp() {
+    const updatedEl = document.getElementById('ticker-updated');
+    if (!updatedEl || !lastUpdated) return;
+    const diff = Math.floor((Date.now() - lastUpdated) / 1000);
+    if (diff < 30) updatedEl.textContent = 'Baru aja di-update';
+    else if (diff < 60) updatedEl.textContent = `Update ${diff} detik lalu`;
+    else if (diff < 3600) updatedEl.textContent = `Update ${Math.floor(diff / 60)} menit lalu`;
+    else updatedEl.textContent = `Update ${Math.floor(diff / 3600)} jam lalu`;
+  }
+
+  function setChange(el, c) {
+    if (!el) return;
+    const sign = c >= 0 ? '+' : '';
+    el.textContent = sign + c.toFixed(2) + '%';
+    el.classList.remove('up', 'down');
+    el.classList.add(c >= 0 ? 'up' : 'down');
+  }
+
+  async function loadPrices() {
+    try {
+      const res = await fetch(API);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+
+      const update = (id, priceId, changeId, decimals) => {
+        const p = data[id]?.usd;
+        const c = data[id]?.usd_24h_change;
+        if (p == null || c == null) return;
+
+        const priceEl = document.getElementById(priceId);
+        if (priceEl) {
+          priceEl.textContent = fmtPrice(p, decimals);
+          priceEl.hidden = false;
+          requestAnimationFrame(() => priceEl.classList.add('is-loaded'));
+        }
+        setChange(document.getElementById(changeId), c);
+
+        const item = priceEl?.closest('[data-market-item]');
+        if (item) hideSkeleton(item);
+      };
+
+      update('bitcoin', 'btc-price', 'btc-change', 0);
+      update('ethereum', 'eth-price', 'eth-change', 0);
+      update('solana', 'sol-price', 'sol-change', 2);
+      update('binancecoin', 'bnb-price', 'bnb-change', 2);
+
+      const updateHero = (id, priceId, changeId, decimals) => {
+        const p = data[id]?.usd;
+        const c = data[id]?.usd_24h_change;
+        if (p == null || c == null) return;
+        const priceEl = document.getElementById(priceId);
+        if (priceEl) priceEl.textContent = fmtPrice(p, decimals);
+        setChange(document.getElementById(changeId), c);
+      };
+      updateHero('bitcoin', 'hero-btc-price', 'hero-btc-change', 0);
+      updateHero('ethereum', 'hero-eth-price', 'hero-eth-change', 0);
+
+      lastUpdated = Date.now();
+      retryCount = 0;
+      updateTimestamp();
+    } catch (e) {
+      console.warn('Price fetch failed:', e);
+      retryCount++;
+      if (retryCount >= 3) setUnavailable();
+    }
+  }
+
+  loadPrices();
+  setInterval(loadPrices, REFRESH_INTERVAL);
+  setInterval(updateTimestamp, 10000);
+
+  const els = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    els.forEach((el) => io.observe(el));
+  } else {
+    els.forEach((el) => el.classList.add('is-visible'));
+  }
+</script>

@@ -1,0 +1,133 @@
+---
+import { profile } from '../data/profile';
+import { socials } from '../data/socials';
+
+const year = new Date().getFullYear();
+const links = [
+  { label: 'GitHub', href: socials.github.url },
+  { label: 'Instagram', href: socials.instagram.url },
+  { label: 'Telegram', href: socials.telegram.url },
+  { label: 'Email', href: `mailto:${socials.email}` },
+];
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <p class="footer-name">{profile.name}</p>
+      <p class="footer-role">Informatics Student</p>
+      <p class="footer-tagline">Code · Crypto · Blockchain · Web3</p>
+    </div>
+
+    <ul class="footer-links">
+      {links.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            target={link.href.startsWith('mailto') ? undefined : '_blank'}
+            rel={link.href.startsWith('mailto') ? undefined : 'noopener'}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="container footer-bottom">
+    <p class="footer-quote">
+      Dibuat sambil belajar dan ngulik hal-hal yang kadang bikin lupa waktu. 😅
+    </p>
+    <p class="footer-copy">© {year} {profile.name}</p>
+  </div>
+</footer>
+
+<style>
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-8);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .footer-brand {
+    max-width: 280px;
+  }
+  .footer-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-1) 0;
+  }
+  .footer-role {
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    margin: 0 0 var(--space-2) 0;
+  }
+  .footer-tagline {
+    font-size: 0.75rem;
+    color: var(--text-quaternary);
+    margin: 0;
+    font-family: var(--font-mono);
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+  }
+  .footer-links a {
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    transition: color 0.15s ease;
+  }
+  .footer-links a:hover {
+    color: var(--text-primary);
+  }
+
+  .footer-bottom {
+    padding-top: var(--space-6);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    font-size: 0.75rem;
+    color: var(--text-quaternary);
+  }
+  .footer-bottom p {
+    margin: 0;
+  }
+  .footer-quote {
+    max-width: 480px;
+    line-height: 1.6;
+  }
+  .footer-copy {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .footer-inner {
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+    .footer-brand {
+      max-width: none;
+    }
+    .footer-links {
+      gap: var(--space-4);
+    }
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+    }
+    .footer-copy {
+      white-space: normal;
+    }
+  }
+</style>

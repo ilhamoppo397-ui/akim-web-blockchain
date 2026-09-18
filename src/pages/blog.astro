@@ -1,0 +1,229 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { articles } from '../data/articles';
+
+const categories = ['All', 'Crypto', 'Web3', 'Trading', 'Informatika'];
+---
+
+<BaseLayout title="Blog — Akim" description="Catatan, eksperimen, dan opini soal crypto, Web3, coding, dan trading.">
+  <div class="container">
+    <header class="page-header">
+      <p class="page-label">Blog</p>
+      <h1>Catatan gue</h1>
+      <p class="page-lead">
+        Tempat gue nyimpen hal-hal yang lagi gue pelajarin. Kadang rapi, kadang
+        cuma catatan singkat. Semua soal coding, crypto, Web3, dan trading.
+      </p>
+    </header>
+
+    <nav class="filters" aria-label="Filter kategori">
+      {categories.map((cat, i) => (
+        <button
+          class={`filter${i === 0 ? ' active' : ''}`}
+          data-category={cat}
+          type="button"
+        >
+          {cat}
+        </button>
+      ))}
+    </nav>
+
+    <div class="post-list" id="post-list">
+      {articles.map((post) => (
+        <a
+          href={`/posts/${post.slug}`}
+          class="post-row"
+          data-category={post.category}
+        >
+          <div class="post-meta">
+            <span class="post-date">{post.dateLabel}</span>
+            <span class="post-dot">·</span>
+            <span class="post-tag">{post.category}</span>
+            <span class="post-dot">·</span>
+            <span class="post-read">{post.readTime}</span>
+          </div>
+          <h2 class="post-title">{post.title}</h2>
+          <p class="post-desc">{post.description}</p>
+        </a>
+      ))}
+    </div>
+
+    <p class="empty-state" id="empty-state" hidden>
+      Belum ada catatan di kategori ini. Nanti gue tulis. 😅
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .page-label {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-3);
+    font-weight: 600;
+  }
+
+  .page-header h1 {
+    font-size: 2.25rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .page-lead {
+    font-size: 1.0625rem;
+    color: var(--text-tertiary);
+    margin: 0;
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  /* ============ FILTERS ============ */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-8);
+  }
+
+  .filter {
+    padding: 0.375rem 0.875rem;
+    background: transparent;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .filter:hover {
+    color: var(--text-primary);
+    border-color: var(--border-default);
+  }
+
+  .filter.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  /* ============ POST LIST ============ */
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .post-row {
+    display: block;
+    padding: var(--space-6) 0;
+    border-bottom: 1px solid var(--border-subtle);
+    text-decoration: none;
+    color: inherit;
+    transition: padding 0.15s ease, opacity 0.25s ease;
+  }
+
+  .post-row:hover {
+    padding-left: var(--space-3);
+    text-decoration: none;
+  }
+
+  .post-row:hover .post-title {
+    color: var(--accent);
+  }
+
+  .post-row.is-hidden {
+    display: none;
+  }
+
+  .post-meta {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .post-tag {
+    color: var(--accent);
+  }
+
+  .post-dot {
+    color: var(--text-quaternary);
+  }
+
+  .post-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    transition: color 0.15s ease;
+  }
+
+  .post-desc {
+    font-size: 0.9375rem;
+    color: var(--text-tertiary);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* ============ EMPTY STATE ============ */
+  .empty-state {
+    padding: var(--space-12) 0;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 0.9375rem;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 640px) {
+    .page-header h1 {
+      font-size: 1.875rem;
+    }
+    .filter {
+      font-size: 0.75rem;
+      padding: 0.3125rem 0.75rem;
+    }
+  }
+</style>
+
+<script>
+  const filters = document.querySelectorAll('.filter');
+  const posts = document.querySelectorAll('.post-row');
+  const emptyState = document.getElementById('empty-state');
+
+  filters.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const category = btn.dataset.category;
+
+      // Update active state
+      filters.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Filter posts
+      let visibleCount = 0;
+      posts.forEach((post) => {
+        const postCat = post.dataset.category;
+        const match = category === 'All' || postCat === category;
+        post.classList.toggle('is-hidden', !match);
+        if (match) visibleCount++;
+      });
+
+      // Toggle empty state
+      if (emptyState) {
+        emptyState.hidden = visibleCount > 0;
+      }
+    });
+  });
+</script>
