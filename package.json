@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "astro": "^4.16.0",
-    "ethers": "^6.17.0"
+    "ethers": "^6.17.0",
+    "qrcode": "^1.5.4"
   }
 }
