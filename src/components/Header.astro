@@ -1,19 +1,25 @@
 ---
 const links = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/portfolio', label: 'Portofolio' },
-  { href: '/tools', label: 'Tools' },
-  { href: '/contact', label: 'Kontak' },
+  { href: 'https://akim.web.id/', label: 'Home' },
+  { href: 'https://akim.web.id/about', label: 'About' },
+  { href: 'https://akim.web.id/blog', label: 'Blog' },
+  { href: 'https://akim.web.id/portfolio', label: 'Portofolio' },
+  { href: 'https://akim.web.id/tools', label: 'Tools' },
+  { href: '/certificate', label: 'Certificate' },
+  { href: 'https://akim.web.id/contact', label: 'Kontak' },
 ];
 
 const currentPath = Astro.url.pathname;
+
+function isActive(href: string): boolean {
+  if (href.startsWith('http')) return false;
+  return currentPath === href || currentPath.startsWith(href + '/');
+}
 ---
 
 <header class="site-header">
   <div class="container header-inner">
-    <a href="/" class="logo">
+    <a href="https://akim.web.id/" class="logo">
       <span class="logo-mark">A</span>
       <span class="logo-text">akim<span class="logo-dot">.</span>web.id</span>
     </a>
@@ -24,7 +30,7 @@ const currentPath = Astro.url.pathname;
           <li>
             <a
               href={link.href}
-              class={currentPath === link.href ? 'active' : ''}
+              class={isActive(link.href) ? 'active' : ''}
             >
               {link.label}
             </a>
@@ -58,7 +64,7 @@ const currentPath = Astro.url.pathname;
         <li>
           <a
             href={link.href}
-            class={currentPath === link.href ? 'active' : ''}
+            class={isActive(link.href) ? 'active' : ''}
           >
             {link.label}
           </a>
@@ -130,7 +136,7 @@ const currentPath = Astro.url.pathname;
 
   .nav-desktop ul {
     display: flex;
-    gap: var(--space-5, 1.25rem);
+    gap: var(--space-4, 1rem);
     list-style: none;
     padding: 0;
     margin: 0;
@@ -140,6 +146,7 @@ const currentPath = Astro.url.pathname;
     font-size: 0.875rem;
     font-weight: 500;
     transition: color 0.15s ease;
+    white-space: nowrap;
   }
   .nav-desktop a:hover,
   .nav-desktop a.active {
@@ -214,7 +221,6 @@ const currentPath = Astro.url.pathname;
 </style>
 
 <script>
-  // Mobile menu toggle
   const toggle = document.querySelector('[data-menu-toggle]');
   const menu = document.querySelector('[data-mobile-menu]');
 
@@ -234,7 +240,6 @@ const currentPath = Astro.url.pathname;
     });
   }
 
-  // Theme toggle
   const themeBtn = document.querySelector('[data-theme-toggle]');
   if (themeBtn) {
     themeBtn.addEventListener('click', () => {
