@@ -28,3 +28,7 @@ yarn-error.log*
 # Blockchain
 .env
 .env.local
+
+# Vercel build output
+.vercel/
+.vercel
