@@ -144,25 +144,50 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   /* Loading */
   .loading-state {
     display: flex;
-    align-items: center;
-    gap: var(--space-4);
+    flex-direction: column;
+    gap: var(--space-3);
     padding: var(--space-12) 0;
-    color: var(--text-tertiary);
-    font-size: 0.9375rem;
     max-width: 720px;
   }
-  .loading-dot {
-    width: 12px;
-    height: 12px;
+  .loading-step {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: 0.9375rem;
+    color: var(--text-tertiary);
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+  }
+  .loading-step.active {
+    opacity: 1;
+    color: var(--text-primary);
+  }
+  .loading-step.done {
+    opacity: 1;
+    color: var(--positive);
+  }
+  .loading-step .step-icon {
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
-    background: var(--accent);
-    animation: pulse 1.5s ease-in-out infinite;
+    border: 2px solid var(--border-default);
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.625rem;
   }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.3; transform: scale(0.8); }
+  .loading-step.active .step-icon {
+    border-color: var(--accent);
+    border-top-color: transparent;
+    animation: spin 0.8s linear infinite;
   }
+  .loading-step.done .step-icon {
+    border-color: var(--positive);
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--positive);
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   /* Result wrapper */
   .result-wrap {
@@ -188,10 +213,16 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     border: 1px solid rgba(245, 158, 11, 0.25);
     border-left: 4px solid var(--warning);
   }
-  .status-card.not-found {
+  .status-card.not-found,
+  .status-card.invalid {
     background: rgba(239, 68, 68, 0.06);
     border: 1px solid rgba(239, 68, 68, 0.25);
     border-left: 4px solid var(--negative);
+  }
+  .status-card.error {
+    background: rgba(245, 158, 11, 0.06);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-left: 4px solid var(--warning);
   }
 
   .status-icon {
@@ -209,19 +240,18 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     background: rgba(16, 185, 129, 0.15);
     color: var(--positive);
   }
-  .status-card.revoked .status-icon {
+  .status-card.revoked .status-icon,
+  .status-card.error .status-icon {
     background: rgba(245, 158, 11, 0.15);
     color: var(--warning);
   }
-  .status-card.not-found .status-icon {
+  .status-card.not-found .status-icon,
+  .status-card.invalid .status-icon {
     background: rgba(239, 68, 68, 0.15);
     color: var(--negative);
   }
 
-  .status-content {
-    flex: 1;
-    min-width: 0;
-  }
+  .status-content { flex: 1; min-width: 0; }
   .status-label {
     font-size: 0.6875rem;
     text-transform: uppercase;
@@ -230,8 +260,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     margin-bottom: var(--space-2);
   }
   .status-card.verified .status-label { color: var(--positive); }
-  .status-card.revoked .status-label { color: var(--warning); }
-  .status-card.not-found .status-label { color: var(--negative); }
+  .status-card.revoked .status-label,
+  .status-card.error .status-label { color: var(--warning); }
+  .status-card.not-found .status-label,
+  .status-card.invalid .status-label { color: var(--negative); }
 
   .status-title {
     font-size: 1.25rem;
@@ -248,9 +280,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   }
 
   /* Section */
-  .section {
-    margin-bottom: var(--space-8);
-  }
+  .section { margin-bottom: var(--space-8); }
   .section-title {
     font-size: 0.6875rem;
     text-transform: uppercase;
@@ -268,7 +298,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   }
   .info-row {
     display: grid;
-    grid-template-columns: 140px 1fr;
+    grid-template-columns: 160px 1fr;
     gap: var(--space-4);
     padding: var(--space-4) 0;
     border-bottom: 1px solid var(--border-subtle);
@@ -300,6 +330,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     flex-wrap: wrap;
   }
 
+  /* Copy button */
   .copy-btn {
     display: inline-flex;
     align-items: center;
@@ -324,6 +355,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     border-color: rgba(16, 185, 129, 0.4);
   }
 
+  /* Badges */
   .status-badge {
     display: inline-block;
     font-size: 0.6875rem;
@@ -341,16 +373,37 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     background: rgba(245, 158, 11, 0.1);
     color: var(--warning);
   }
+  .testnet-badge {
+    display: inline-block;
+    font-size: 0.625rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(79, 139, 255, 0.12);
+    color: var(--accent);
+    border: 1px solid rgba(79, 139, 255, 0.25);
+    margin-left: var(--space-2);
+    vertical-align: middle;
+  }
 
-  .etherscan-link {
+  /* Links */
+  .link-row {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-top: var(--space-2);
+  }
+  .link-inline {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
-    margin-top: var(--space-3);
+    gap: 4px;
     font-size: 0.8125rem;
     color: var(--accent);
+    text-decoration: none;
   }
-  .etherscan-link:hover { color: var(--accent-hover); }
+  .link-inline:hover { color: var(--accent-hover); }
 
   /* QR */
   .qr-flex {
@@ -403,6 +456,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     cursor: pointer;
     text-decoration: none;
     transition: all 0.15s ease;
+    min-height: 40px;
   }
   .btn-secondary:hover {
     background: var(--bg-hover);
@@ -458,6 +512,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     .qr-info { width: 100%; text-align: center; }
 
     .empty-card { padding: var(--space-6); }
+
+    .actions-row { gap: var(--space-2); }
+    .btn-secondary { padding: 0.5rem 1rem; font-size: 0.8125rem; }
   }
 </style>
 
@@ -480,6 +537,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   function shorten(str, front = 10, back = 8) {
     if (!str || str.length < front + back + 3) return str;
     return str.slice(0, front) + '...' + str.slice(-back);
+  }
+
+  function setPageTitle(title) {
+    document.title = title;
+  }
+
+  function setPageMetaDescription(desc) {
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', desc);
   }
 
   function showToast(message) {
@@ -514,24 +580,61 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     return `https://certificate.akim.web.id/certificate/verify?id=${encodeURIComponent(certId)}`;
   }
 
+  function isTestnet() {
+    return BLOCKCHAIN_CONFIG.network === 'sepolia' || Number(BLOCKCHAIN_CONFIG.chainId) === 11155111;
+  }
+
+  function getNetworkLabel() {
+    if (BLOCKCHAIN_CONFIG.network === 'sepolia') return 'Ethereum Sepolia Testnet';
+    return BLOCKCHAIN_CONFIG.network;
+  }
+
+  function getEtherscanBase() {
+    if (BLOCKCHAIN_CONFIG.network === 'sepolia') return 'https://sepolia.etherscan.io';
+    return '';
+  }
+
   // ============================================
   // LOADING
   // ============================================
   function renderLoading() {
     if (!resultEl) return;
     resultEl.innerHTML = `
-      <div class="loading-state">
-        <div class="loading-dot"></div>
-        <p>Verifying certificate on blockchain...</p>
+      <div class="loading-state" role="status" aria-live="polite">
+        <div class="loading-step active" data-step="1">
+          <div class="step-icon">1</div>
+          <span>Verifying certificate...</span>
+        </div>
+        <div class="loading-step" data-step="2">
+          <div class="step-icon">2</div>
+          <span>Checking blockchain record...</span>
+        </div>
+        <div class="loading-step" data-step="3">
+          <div class="step-icon">3</div>
+          <span>Verifying smart contract data...</span>
+        </div>
       </div>
     `;
   }
 
+  function advanceLoading(step) {
+    const steps = resultEl?.querySelectorAll('.loading-step');
+    if (!steps) return;
+    steps.forEach((el) => {
+      const s = Number((el as HTMLElement).dataset.step);
+      el.classList.remove('active');
+      if (s < step) el.classList.add('done');
+      if (s === step) el.classList.add('active');
+    });
+  }
+
   // ============================================
-  // EMPTY STATE
+  // EMPTY
   // ============================================
   function renderEmpty() {
     if (!resultEl) return;
+    setPageTitle('Verify Certificate — Akim');
+    setPageMetaDescription('Verifikasi sertifikat digital berbasis blockchain Ethereum Sepolia.');
     resultEl.innerHTML = `
       <div class="empty-card">
         <h2>Verify a Certificate</h2>
@@ -559,8 +662,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   // ============================================
   // NOT FOUND
   // ============================================
-  function renderNotFound(message) {
+  function renderNotFound(message, certId) {
     if (!resultEl) return;
+    const titlePart = certId ? ` — ${certId}` : '';
+    setPageTitle(`Certificate Not Found${titlePart} | Akim`);
+    setPageMetaDescription('Certificate tidak ditemukan di blockchain Ethereum Sepolia.');
     resultEl.innerHTML = `
       <div class="result-wrap">
         <div class="status-card not-found">
@@ -586,7 +692,76 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   }
 
   // ============================================
-  // RESULT — VERIFIED / REVOKED
+  // INVALID FORMAT
+  // ============================================
+  function renderInvalidFormat(certId) {
+    if (!resultEl) return;
+    setPageTitle(`Invalid Certificate ID | Akim`);
+    setPageMetaDescription('Certificate ID tidak sesuai format CERT-YYYY-NNN.');
+    resultEl.innerHTML = `
+      <div class="result-wrap">
+        <div class="status-card invalid">
+          <div class="status-icon">✕</div>
+          <div class="status-content">
+            <p class="status-label">Invalid Certificate ID</p>
+            <h2 class="status-title">Invalid Format</h2>
+            <p class="status-desc">
+              Certificate ID <strong>${escape(certId)}</strong> tidak sesuai format.
+              Format yang benar: <code>CERT-YYYY-NNN</code>.
+            </p>
+          </div>
+        </div>
+        <div class="actions-row">
+          <button class="btn-secondary" id="try-again-btn">Verify Another Certificate</button>
+        </div>
+      </div>
+    `;
+    const btn = document.getElementById('try-again-btn');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        window.history.pushState({}, '', '/certificate/verify');
+        renderEmpty();
+      });
+    }
+  }
+
+  // ============================================
+  // VERIFICATION ERROR
+  // ============================================
+  function renderVerificationError(message) {
+    if (!resultEl) return;
+    setPageTitle('Verification Unavailable | Akim');
+    setPageMetaDescription('Blockchain verification temporarily unavailable.');
+    resultEl.innerHTML = `
+      <div class="result-wrap">
+        <div class="status-card error">
+          <div class="status-icon">⚠</div>
+          <div class="status-content">
+            <p class="status-label">Verification Unavailable</p>
+            <h2 class="status-title">Cannot Reach Blockchain</h2>
+            <p class="status-desc">
+              Verifikasi sedang tidak bisa diakses. Silakan coba lagi nanti.
+            </p>
+          </div>
+        </div>
+        <div class="actions-row">
+          <button class="btn-secondary" id="retry-btn">Coba Lagi</button>
+        </div>
+      </div>
+    `;
+    const btn = document.getElementById('retry-btn');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        if (id) runVerify(id);
+        else renderEmpty();
+      });
+    }
+  }
+
+  // ============================================
+  // RESULT
   // ============================================
   function renderResult(d) {
     if (!resultEl) return;
@@ -594,25 +769,32 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     const isRevoked = d.revoked;
     const statusClass = isRevoked ? 'revoked' : 'verified';
     const statusLabel = isRevoked ? 'Certificate Revoked' : 'Certificate Verified';
-    const statusTitle = isRevoked
-      ? 'This certificate has been revoked'
-      : 'This certificate is valid';
+    const statusTitle = isRevoked ? 'This certificate has been revoked' : 'This certificate is valid';
     const statusDesc = isRevoked
       ? 'Sertifikat ini sudah dicabut oleh issuer. Data masih tercatat di blockchain tapi statusnya tidak valid lagi.'
       : 'Sertifikat ini valid dan terverifikasi di blockchain.';
     const statusIcon = isRevoked ? '!' : '✓';
 
+    // SEO — title + meta description dinamis
+    const titleStatus = isRevoked ? 'Revoked' : 'Verified';
+    setPageTitle(`Certificate ${d.certificateId} — ${titleStatus} | Akim`);
+    setPageMetaDescription(
+      `Certificate ${d.certificateId} untuk ${d.recipientName} — ${d.certificateType}. ${titleStatus} on Ethereum Sepolia blockchain.`
+    );
+
     const verifyUrl = getVerifyUrl(d.certificateId);
     const fullHash = d.certificateHash;
     const fullContract = BLOCKCHAIN_CONFIG.contractAddress;
-    const networkLabel = BLOCKCHAIN_CONFIG.network === 'sepolia'
-      ? 'Ethereum Sepolia Testnet'
-      : BLOCKCHAIN_CONFIG.network;
+    const networkLabel = getNetworkLabel();
+    const testnet = isTestnet();
+    const etherscanBase = getEtherscanBase();
+    const contractLink = etherscanBase
+      ? `${etherscanBase}/address/${fullContract}`
+      : '';
 
     resultEl.innerHTML = `
       <div class="result-wrap">
 
-        <!-- STATUS -->
         <div class="status-card ${statusClass}">
           <div class="status-icon">${statusIcon}</div>
           <div class="status-content">
@@ -622,13 +804,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           </div>
         </div>
 
-        <!-- CERTIFICATE INFO -->
         <div class="section">
           <p class="section-title">Certificate Information</p>
           <div class="info-card">
             <div class="info-row">
               <span class="info-label">Certificate ID</span>
-              <span class="info-value mono">${escape(d.certificateId)}</span>
+              <span class="info-value mono hash">
+                <span>${escape(d.certificateId)}</span>
+                <button class="copy-btn" data-copy="${escape(d.certificateId)}">Copy</button>
+              </span>
             </div>
             <div class="info-row">
               <span class="info-label">Recipient</span>
@@ -657,9 +841,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           </div>
         </div>
 
-        <!-- BLOCKCHAIN -->
         <div class="section">
-          <p class="section-title">Blockchain Verification</p>
+          <p class="section-title">
+            Blockchain Verification
+            ${testnet ? '<span class="testnet-badge">Testnet</span>' : ''}
+          </p>
           <div class="info-card">
             <div class="info-row">
               <span class="info-label">Network</span>
@@ -683,21 +869,24 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               <span class="info-label">Trust</span>
               <span class="info-value">
                 ✓ Verified on blockchain
-                <a class="etherscan-link" href="https://sepolia.etherscan.io/address/${escape(fullContract)}" target="_blank" rel="noopener">
-                  View on Etherscan ↗
-                </a>
+                ${contractLink ? `
+                  <div class="link-row">
+                    <a class="link-inline" href="${contractLink}" target="_blank" rel="noopener">
+                      View Contract ↗
+                    </a>
+                  </div>
+                ` : ''}
               </span>
             </div>
           </div>
         </div>
 
-        <!-- QR -->
         <div class="section">
           <p class="section-title">Verify with QR</p>
           <div class="info-card">
             <div class="qr-flex">
               <div class="qr-image-wrap">
-                <canvas id="qr-canvas" aria-label="QR code untuk verifikasi sertifikat"></canvas>
+                <canvas id="qr-canvas" aria-label="QR code untuk verifikasi sertifikat ${escape(d.certificateId)}"></canvas>
               </div>
               <div class="qr-info">
                 <p class="qr-caption">Scan QR code untuk membuka halaman verifikasi sertifikat ini.</p>
@@ -712,7 +901,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           </div>
         </div>
 
-        <!-- VERIFY ANOTHER -->
         <div class="section">
           <p class="section-title">Verify another certificate</p>
           <form id="verify-form" class="verify-form">
@@ -734,7 +922,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       </div>
     `;
 
-    // Bind copy buttons
     resultEl.querySelectorAll('.copy-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
         const value = (btn as HTMLElement).dataset.copy || '';
@@ -742,10 +929,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       });
     });
 
-    // Generate QR
     generateQR(verifyUrl, d.certificateId);
 
-    // Share button
     const shareBtn = document.getElementById('share-btn');
     if (shareBtn) {
       shareBtn.addEventListener('click', async () => {
@@ -757,8 +942,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         if (navigator.share) {
           try {
             await navigator.share(shareData);
+            showToast('Certificate link ready to share.');
           } catch (e) {
-            // user cancelled — no-op
+            // user cancelled
           }
         } else {
           copyToClipboard(verifyUrl);
@@ -766,7 +952,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       });
     }
 
-    // Copy verification link
     const copyLinkBtn = document.getElementById('copy-link-btn');
     if (copyLinkBtn) {
       copyLinkBtn.addEventListener('click', () => {
@@ -774,7 +959,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       });
     }
 
-    // Verify form di bawah
     bindForm();
   }
 
@@ -803,12 +987,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         a.href = url;
         a.download = `${certId}-qr.png`;
         a.click();
+        showToast('QR code downloaded.');
       });
     }
   }
 
   // ============================================
-  // FORM BIND
+  // FORM
   // ============================================
   function bindForm() {
     const form = document.getElementById('verify-form');
@@ -827,19 +1012,57 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   }
 
   // ============================================
-  // VERIFY
+  // VALIDATE FORMAT
+  // ============================================
+  function isValidFormat(id) {
+    return /^CERT-\d{4}-\d{3,}$/i.test(id);
+  }
+
+  // ============================================
+  // RUN VERIFY
   // ============================================
   async function runVerify(certificateId) {
     if (!resultEl || !certificateId) return;
 
-    renderLoading();
+    if (!isValidFormat(certificateId)) {
+      renderInvalidFormat(certificateId);
+      return;
+    }
 
-    const result = await verifyCertificate(certificateId);
+    renderLoading();
+    advanceLoading(1);
+
+    await new Promise((r) => setTimeout(r, 300));
+    advanceLoading(2);
+
+    let result;
+    try {
+      result = await verifyCertificate(certificateId);
+    } catch (e) {
+      renderVerificationError('Gagal menghubungi blockchain.');
+      return;
+    }
+
+    advanceLoading(3);
+    await new Promise((r) => setTimeout(r, 200));
 
     if (!result.success || !result.data) {
-      renderNotFound(
-        result.error || `Certificate dengan ID "${certificateId}" tidak ditemukan di blockchain.`
-      );
+      const errMsg = result.error || '';
+      const isNetworkError =
+        errMsg.toLowerCase().includes('rpc') ||
+        errMsg.toLowerCase().includes('network') ||
+        errMsg.toLowerCase().includes('connect') ||
+        errMsg.toLowerCase().includes('timeout') ||
+        errMsg.toLowerCase().includes('fetch');
+
+      if (isNetworkError) {
+        renderVerificationError(errMsg);
+      } else {
+        renderNotFound(
+          `Certificate dengan ID "${certificateId}" tidak ditemukan di blockchain.`,
+          certificateId
+        );
+      }
       return;
     }
 
@@ -857,7 +1080,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     renderEmpty();
   }
 
-  // Handle back/forward
   window.addEventListener('popstate', () => {
     const p = new URLSearchParams(window.location.search);
     const id = p.get('id');
