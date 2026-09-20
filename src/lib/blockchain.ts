@@ -100,6 +100,9 @@ export const BLOCKCHAIN_CONFIG = {
     '0x5FbDB2315678afecb367f032d93F642f64180aa3',
   network: import.meta.env.PUBLIC_BLOCKCHAIN_NETWORK || 'hardhat-local',
   chainId: Number(import.meta.env.PUBLIC_CHAIN_ID || 31337),
+  deploymentBlock: Number(
+    import.meta.env.PUBLIC_CERTIFICATE_DEPLOYMENT_BLOCK || 0
+  ),
 };
 
 // ============================================
@@ -187,6 +190,77 @@ export async function verifyCertificate(
       success: false,
       error: `Gagal baca blockchain: ${message}`,
     };
+  }
+}
+
+// ============================================
+// GET CERTIFICATE TX HASH
+// ============================================
+
+const TX_CACHE_PREFIX = 'certificate_tx_';
+
+export async function getCertificateTxHash(
+  certificateId: string
+): Promise<string | null> {
+  if (!certificateId) return null;
+
+  // Cek cache dulu (tapi cache bukan sumber kebenaran)
+  try {
+    const cached =
+      typeof localStorage !== 'undefined'
+        ? localStorage.getItem(TX_CACHE_PREFIX + certificateId)
+        : null;
+    if (cached && cached.startsWith('0x')) {
+      return cached;
+    }
+  } catch {
+    // localStorage tidak tersedia — lanjut tanpa cache
+  }
+
+  try {
+    const provider = getProvider();
+    const contract = new ethers.Contract(
+      BLOCKCHAIN_CONFIG.contractAddress,
+      CERTIFICATE_ABI,
+      provider
+    );
+
+    const deploymentBlock = BLOCKCHAIN_CONFIG.deploymentBlock || 0;
+
+    // Filter langsung by certificateId — ethers hash otomatis
+    const filter = contract.filters.CertificateIssued(certificateId);
+
+    const currentBlock = await provider.getBlockNumber();
+    const CHUNK = 9999;
+
+    for (let from = deploymentBlock; from <= currentBlock; from += CHUNK) {
+      const to = Math.min(from + CHUNK - 1, currentBlock);
+      try {
+        const events = await contract.queryFilter(filter, from, to);
+        if (events.length > 0) {
+          const txHash = events[0].transactionHash;
+
+          // Simpan ke cache
+          try {
+            if (typeof localStorage !== 'undefined') {
+              localStorage.setItem(TX_CACHE_PREFIX + certificateId, txHash);
+            }
+          } catch {
+            // ignore cache error
+          }
+
+          return txHash;
+        }
+      } catch {
+        // skip chunk yang error
+        continue;
+      }
+    }
+
+    return null;
+  } catch (e) {
+    console.warn('getCertificateTxHash failed:', e);
+    return null;
   }
 }
 
