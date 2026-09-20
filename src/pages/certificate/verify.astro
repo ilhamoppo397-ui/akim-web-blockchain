@@ -451,6 +451,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     border-color: var(--border-strong);
     color: var(--text-primary);
   }
+  .btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 
   .toast {
     position: fixed;
@@ -503,6 +507,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 <script>
   import { verifyCertificate, formatDate, BLOCKCHAIN_CONFIG, getCertificateTxHash } from '../../lib/blockchain';
+  import { generateCertificatePDF } from '../../lib/certificate-pdf';
   import QRCode from 'qrcode';
 
   const resultEl = document.getElementById('verify-result');
@@ -577,9 +582,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     return '';
   }
 
-  // ============================================
-  // LOADING
-  // ============================================
   function renderLoading() {
     if (!resultEl) return;
     resultEl.innerHTML = `
@@ -611,9 +613,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     });
   }
 
-  // ============================================
-  // EMPTY
-  // ============================================
   function renderEmpty() {
     if (!resultEl) return;
     setPageTitle('Verify Certificate — Akim');
@@ -642,9 +641,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     bindForm();
   }
 
-  // ============================================
-  // NOT FOUND
-  // ============================================
   function renderNotFound(message, certId) {
     if (!resultEl) return;
     const titlePart = certId ? ` — ${certId}` : '';
@@ -674,9 +670,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     }
   }
 
-  // ============================================
-  // INVALID FORMAT
-  // ============================================
   function renderInvalidFormat(certId) {
     if (!resultEl) return;
     setPageTitle(`Invalid Certificate ID | Akim`);
@@ -708,9 +701,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     }
   }
 
-  // ============================================
-  // VERIFICATION ERROR
-  // ============================================
   function renderVerificationError(message) {
     if (!resultEl) return;
     setPageTitle('Verification Unavailable | Akim');
@@ -743,9 +733,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     }
   }
 
-  // ============================================
-  // RESULT
-  // ============================================
   function renderResult(d) {
     if (!resultEl) return;
 
@@ -880,6 +867,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                 <p class="qr-caption">Scan QR code untuk membuka halaman verifikasi sertifikat ini.</p>
                 <p class="qr-id">${escape(d.certificateId)}</p>
                 <div class="actions-row">
+                  <button class="btn-secondary" id="download-pdf-btn">Download PDF</button>
                   <button class="btn-secondary" id="download-qr-btn">Download QR</button>
                   <button class="btn-secondary" id="share-btn">Share Certificate</button>
                   <button class="btn-secondary" id="copy-link-btn">Copy Verification Link</button>
@@ -919,6 +907,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
     generateQR(verifyUrl, d.certificateId);
 
+    // Bind download PDF
+    bindDownloadPDF(d);
+
     // Load transaction hash (async, non-blocking)
     loadTxHash(d.certificateId);
 
@@ -951,6 +942,55 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     }
 
     bindForm();
+  }
+
+  // ============================================
+  // DOWNLOAD PDF
+  // ============================================
+  function bindDownloadPDF(cert) {
+    const btn = document.getElementById('download-pdf-btn') as HTMLButtonElement;
+    if (!btn) return;
+
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      const originalText = btn.textContent;
+      btn.textContent = 'Generating PDF...';
+
+      try {
+        let txHash: string | null = null;
+        try {
+          txHash = await getCertificateTxHash(cert.certificateId);
+        } catch {
+          // skip — PDF tetep bisa dibuat tanpa tx hash
+        }
+
+        const verifyUrl = getVerifyUrl(cert.certificateId);
+
+        await generateCertificatePDF(
+          {
+            certificateId: cert.certificateId,
+            recipientName: cert.recipientName,
+            certificateType: cert.certificateType,
+            issuer: cert.issuer,
+            issuedAt: cert.issuedAt,
+            certificateHash: cert.certificateHash,
+            revoked: cert.revoked,
+          },
+          {
+            txHash,
+            verifyUrl,
+          }
+        );
+
+        showToast('PDF downloaded.');
+      } catch (err) {
+        console.error('PDF generation failed:', err);
+        showToast('Gagal generate PDF. Coba lagi.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    });
   }
 
   // ============================================
