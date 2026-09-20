@@ -1,0 +1,314 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Admin Login — Akim Certificate" description="Admin panel untuk digital certificate blockchain.">
+  <div class="login-wrap">
+    <div class="login-card">
+      <header class="login-header">
+        <div class="brand">
+          <span class="brand-mark">A</span>
+          <span class="brand-name">akim<span class="brand-dot">.</span>web.id</span>
+        </div>
+        <h1>Digital Certificate</h1>
+        <p class="subtitle">
+          Manage and verify digital certificates on Ethereum Sepolia.
+        </p>
+      </header>
+
+      <div id="login-content">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Checking MetaMask...</p>
+        </div>
+      </div>
+
+      <footer class="login-footer">
+        <div class="network-info">
+          <span class="network-dot"></span>
+          <span>Sepolia Testnet</span>
+        </div>
+      </footer>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .login-wrap {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-8) var(--space-6);
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: var(--space-8);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+  }
+
+  .login-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: var(--space-6);
+  }
+  .brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    color: white;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 0.9375rem;
+  }
+  .brand-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .brand-dot { color: var(--accent); }
+
+  .login-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+    color: var(--text-primary);
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+    color: var(--text-tertiary);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .login-footer {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border-subtle);
+    text-align: center;
+  }
+
+  .network-info {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+  }
+
+  .network-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--positive);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-6) 0;
+    color: var(--text-tertiary);
+    font-size: 0.875rem;
+  }
+
+  .spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-subtle);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .action-btn {
+    width: 100%;
+    padding: 0.875rem 1.25rem;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+  }
+  .action-btn:hover {
+    background: var(--accent-hover);
+  }
+  .action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .status-message {
+    margin-top: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+  .status-message.error {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: var(--negative);
+  }
+  .status-message.success {
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: var(--positive);
+  }
+  .status-message.info {
+    background: rgba(79, 139, 255, 0.08);
+    border: 1px solid rgba(79, 139, 255, 0.25);
+    color: var(--accent);
+  }
+
+  .wallet-info {
+    margin-top: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    background: var(--bg-base);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    color: var(--text-tertiary);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .wallet-info strong {
+    color: var(--text-primary);
+  }
+</style>
+
+<script>
+  import {
+    hasMetaMask,
+    connectMetaMask,
+    type WalletInfo,
+  } from '../../lib/writeContract';
+
+  const contentEl = document.getElementById('login-content');
+
+  function renderNotInstalled() {
+    if (!contentEl) return;
+    contentEl.innerHTML = `
+      <div class="status-message error">
+        <strong>MetaMask is required.</strong><br />
+        Install MetaMask to access the admin panel.
+      </div>
+      <a href="https://metamask.io/download/" target="_blank" rel="noopener" class="action-btn" style="margin-top: 1rem; text-decoration: none;">
+        Install MetaMask →
+      </a>
+    `;
+  }
+
+  function renderConnectButton() {
+    if (!contentEl) return;
+    contentEl.innerHTML = `
+      <button class="action-btn" id="connect-btn">
+        Connect MetaMask
+      </button>
+      <div id="status-slot"></div>
+    `;
+
+    const btn = document.getElementById('connect-btn');
+    btn?.addEventListener('click', handleConnect);
+  }
+
+  async function handleConnect() {
+    const btn = document.getElementById('connect-btn') as HTMLButtonElement;
+    const slot = document.getElementById('status-slot');
+
+    if (!btn || !slot) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Connecting...';
+
+    try {
+      const wallet = await connectMetaMask();
+
+      if (!wallet.isOwner) {
+        slot.innerHTML = `
+          <div class="status-message error">
+            <strong>Access denied.</strong><br />
+            Connected wallet is not authorized. Only the contract owner can access this panel.
+          </div>
+          <div class="wallet-info">
+            <div><strong>Connected:</strong> ${wallet.address}</div>
+          </div>
+        `;
+        btn.disabled = false;
+        btn.textContent = 'Connect MetaMask';
+        return;
+      }
+
+      slot.innerHTML = `
+        <div class="status-message success">
+          <strong>Access granted.</strong><br />
+          Redirecting to dashboard...
+        </div>
+        <div class="wallet-info">
+          <div><strong>Wallet:</strong> ${wallet.address}</div>
+        </div>
+      `;
+
+      // Simpan session di localStorage (bukan private key!)
+      localStorage.setItem('admin_wallet', wallet.address);
+      localStorage.setItem('admin_connected_at', Date.now().toString());
+
+      // Redirect ke dashboard
+      setTimeout(() => {
+        window.location.href = '/admin';
+      }, 1000);
+    } catch (err: any) {
+      slot.innerHTML = `
+        <div class="status-message error">
+          ${err.message || 'Failed to connect.'}
+        </div>
+      `;
+      btn.disabled = false;
+      btn.textContent = 'Connect MetaMask';
+    }
+  }
+
+  // Init
+  if (hasMetaMask()) {
+    renderConnectButton();
+  } else {
+    renderNotInstalled();
+  }
+</script>

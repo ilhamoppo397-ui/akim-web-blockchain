@@ -1,0 +1,209 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { articles } from '../../data/articles';
+
+const currentSlug = 'analisis-bitcoin-q1-2026';
+const related = articles.filter((a) => a.slug !== currentSlug).slice(0, 2);
+---
+
+<BaseLayout title="Analisis Bitcoin Q1 2026 — Akim" description="Prediksi pergerakan BTC berdasarkan data on-chain dan analisis teknikal.">
+  <div class="container">
+    <article class="post">
+      <a href="/blog" class="back-link">← Blog</a>
+
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-category">Crypto</span>
+          <span class="post-dot">·</span>
+          <span>15 Jan 2026</span>
+          <span class="post-dot">·</span>
+          <span>5 menit baca</span>
+        </div>
+        <h1>Analisis Bitcoin Q1 2026</h1>
+        <p class="post-lead">
+          Prediksi pergerakan BTC berdasarkan data on-chain dan analisis teknikal.
+        </p>
+      </header>
+
+      <div class="post-body">
+        <p>
+          Bitcoin memasuki Q1 2026 dengan volatilitas tinggi. Setelah rally
+          di akhir 2025 yang membawa BTC ke area all-time high, sekarang pasar
+          sedang dalam fase konsolidasi.
+        </p>
+
+        <h2>Kondisi Teknikal</h2>
+        <p>
+          Di timeframe harian, BTC masih bergerak di atas EMA 200, yang
+          menandakan tren bullish jangka panjang masih utuh. Support kuat
+          berada di area <strong>$85,000 — $88,000</strong>. Resistance terdekat
+          di <strong>$95,000</strong>.
+        </p>
+
+        <h2>Data On-Chain</h2>
+        <p>
+          Jumlah BTC yang tersimpan di exchange terus menurun, sementara
+          long-term holder terus menambah posisi. Ini sinyal akumulasi.
+          Funding rate di futures juga masih netral, belum overheat.
+        </p>
+
+        <h2>Kesimpulan</h2>
+        <p>
+          Selama BTC bertahan di atas <strong>$85,000</strong>, skenario bullish
+          masih valid. Target jangka menengah: <strong>$100,000 — $110,000</strong>.
+          Tapi tetap waspada dengan volatilitas makro dari kebijakan Fed.
+        </p>
+
+        <div class="disclaimer">
+          <strong>Disclaimer.</strong> Ini bukan saran investasi. Selalu lakukan riset sendiri.
+        </div>
+      </div>
+
+      <section class="related">
+        <h2>Catatan lain</h2>
+        <div class="related-list">
+          {related.map((post) => (
+            <a href={`/posts/${post.slug}`} class="related-item">
+              <span class="related-category">{post.category}</span>
+              <h3>{post.title}</h3>
+              <p>{post.description}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .post { max-width: 720px; margin: 0 auto; }
+
+  .back-link {
+    display: inline-block;
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-8);
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .post-header {
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: var(--space-12);
+  }
+  .post-meta {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-4);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .post-category { color: var(--accent); font-weight: 600; }
+  .post-dot { color: var(--text-quaternary); }
+
+  .post-header h1 {
+    font-size: 2.25rem;
+    line-height: 1.15;
+    margin-bottom: var(--space-4);
+    letter-spacing: -0.02em;
+  }
+  .post-lead {
+    font-size: 1.125rem;
+    color: var(--text-tertiary);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .post-body {
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+  .post-body p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-6);
+  }
+  .post-body h2 {
+    font-size: 1.375rem;
+    font-weight: 600;
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-4);
+    color: var(--text-primary);
+  }
+  .post-body strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  .disclaimer {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-left: 3px solid var(--warning);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-6);
+    font-size: 0.875rem;
+    color: var(--text-tertiary);
+    margin-top: var(--space-8);
+  }
+  .disclaimer strong { color: var(--warning); }
+
+  /* Related */
+  .related {
+    margin-top: var(--space-16);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--border-subtle);
+  }
+  .related h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    margin: 0 0 var(--space-6) 0;
+  }
+  .related-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .related-item {
+    display: block;
+    padding: var(--space-5) 0;
+    border-bottom: 1px solid var(--border-subtle);
+    text-decoration: none;
+    color: inherit;
+    transition: padding 0.2s ease;
+  }
+  .related-item:last-child { border-bottom: none; }
+  .related-item:hover { padding-left: var(--space-3); text-decoration: none; }
+  .related-item:hover h3 { color: var(--accent); }
+
+  .related-category {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    font-weight: 600;
+    display: block;
+    margin-bottom: var(--space-2);
+  }
+  .related-item h3 {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    margin: 0 0 var(--space-2) 0;
+    color: var(--text-primary);
+    transition: color 0.15s ease;
+  }
+  .related-item p {
+    font-size: 0.875rem;
+    color: var(--text-tertiary);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    .post-header h1 { font-size: 1.75rem; }
+    .post-body { font-size: 1rem; }
+    .post-lead { font-size: 1rem; }
+  }
+</style>

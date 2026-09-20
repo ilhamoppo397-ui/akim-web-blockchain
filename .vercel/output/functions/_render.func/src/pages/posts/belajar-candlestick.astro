@@ -1,0 +1,148 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Belajar Candlestick untuk Pemula — Akim">
+  <div class="container">
+    <article class="post">
+      <a href="/blog" class="back-link">← Blog</a>
+
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">Trading</span>
+          <span class="post-dot">·</span>
+          <span>1 Feb 2026</span>
+          <span class="post-dot">·</span>
+          <span>6 menit baca</span>
+        </div>
+        <h1>Belajar Candlestick untuk Pemula</h1>
+        <p class="post-lead">
+          Pola candlestick paling penting yang harus dikuasai setiap trader.
+        </p>
+      </header>
+
+      <div class="post-body">
+        <p>
+          Candlestick adalah cara visualisasi pergerakan harga di chart trading.
+          Setiap candle nunjukin 4 data: Open, High, Low, Close (OHLC) dalam
+          periode waktu tertentu.
+        </p>
+
+        <h2>Anatomi Candlestick</h2>
+        <p>
+          Setiap candle punya <strong>body</strong> (kotak di tengah) dan
+          <strong>wick</strong> (garis tipis di atas & bawah). Body nunjukin
+          selisih open dan close. Wick nunjukin high dan low.
+        </p>
+
+        <h2>Pola Penting</h2>
+
+        <h3>Doji</h3>
+        <p>
+          Body sangat kecil, hampir kayak garis. Menandakan keraguan pasar,
+          sering muncul di titik reversal.
+        </p>
+
+        <h3>Hammer</h3>
+        <p>
+          Body kecil di atas, wick bawah panjang. Sinyal bullish reversal.
+          Muncul setelah downtrend.
+        </p>
+
+        <h3>Shooting Star</h3>
+        <p>
+          Body kecil di bawah, wick atas panjang. Sinyal bearish reversal.
+          Muncul setelah uptrend.
+        </p>
+
+        <h3>Engulfing</h3>
+        <p>
+          Candle yang body-nya "menelan" candle sebelumnya. Bullish engulfing
+          = sinyal naik. Bearish engulfing = sinyal turun.
+        </p>
+
+        <h2>Tips</h2>
+        <ul>
+          <li>Jangan pakai candlestick tanpa konteks tren</li>
+          <li>Gabungkan dengan support & resistance</li>
+          <li>Konfirmasi dengan volume</li>
+          <li>Latihan di akun demo dulu</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .post { max-width: 640px; margin: 0 auto; }
+  .back-link {
+    display: inline-block;
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-8);
+  }
+  .back-link:hover { color: var(--accent); }
+  .post-header {
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: var(--space-8);
+  }
+  .post-meta {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-4);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .post-tag { color: var(--accent); }
+  .post-dot { color: var(--text-quaternary); }
+  .post-header h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+    margin-bottom: var(--space-4);
+    letter-spacing: -0.02em;
+  }
+  .post-lead {
+    font-size: 1.0625rem;
+    color: var(--text-tertiary);
+    margin: 0;
+    line-height: 1.6;
+  }
+  .post-body {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+  .post-body p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-6);
+  }
+  .post-body h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-4);
+    color: var(--text-primary);
+  }
+  .post-body h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-3);
+    color: var(--text-primary);
+  }
+  .post-body strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  .post-body ul {
+    margin-bottom: var(--space-6);
+    padding-left: var(--space-6);
+  }
+  .post-body ul li {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-2);
+  }
+</style>
