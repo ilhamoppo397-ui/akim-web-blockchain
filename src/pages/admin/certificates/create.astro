@@ -31,12 +31,14 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
             <input
               type="text"
               id="cert-id"
-              placeholder="CERT-2026-XXX"
+              placeholder="CERT-2026-XXXXXX"
               autocomplete="off"
               spellcheck="false"
               required
+              readonly
             />
-            <small>ID unik. Ga bisa dipakai 2 kali.</small>
+            <small>ID auto-generated. Klik 🔄 untuk regenerate.</small>
+            <button type="button" id="regenerate-id" class="btn-regen">🔄 Regenerate ID</button>
           </label>
           <label>
             <span>Recipient Name</span>
@@ -206,6 +208,29 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
   .create-form input::placeholder {
     color: var(--text-quaternary);
   }
+  .create-form input[readonly] {
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+  }
+
+  .btn-regen {
+    margin-top: 6px;
+    font-size: 11px;
+    padding: 4px 10px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-family: inherit;
+    align-self: flex-start;
+  }
+  .btn-regen:hover {
+    background: var(--bg-base);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
 
   .form-actions {
     display: flex;
@@ -312,6 +337,32 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
   const form = document.getElementById('create-form') as HTMLFormElement;
   const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
   const resultSlot = document.getElementById('result-slot');
+
+  // ============================================
+  // AUTO-GENERATE CERTIFICATE ID
+  // ============================================
+  function generateCertificateId(): string {
+    const year = new Date().getFullYear();
+    // Tanpa I, O, 0, 1 — hindari kebingungan
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let random = '';
+    for (let i = 0; i < 6; i++) {
+      random += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return `CERT-${year}-${random}`;
+  }
+
+  const certIdInput = document.getElementById('cert-id') as HTMLInputElement;
+  if (certIdInput) {
+    certIdInput.value = generateCertificateId();
+  }
+
+  const regenBtn = document.getElementById('regenerate-id');
+  if (regenBtn && certIdInput) {
+    regenBtn.addEventListener('click', () => {
+      certIdInput.value = generateCertificateId();
+    });
+  }
 
   // ============================================
   // CHECK WALLET STATUS
@@ -487,9 +538,10 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
         </div>
       `;
 
-      // Reset form
+      // Reset form + generate ID baru
       form.reset();
       (document.getElementById('issuer') as HTMLInputElement).value = 'Akim';
+      if (certIdInput) certIdInput.value = generateCertificateId();
       submitBtn.disabled = false;
       submitBtn.textContent = 'Issue Certificate →';
 

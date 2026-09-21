@@ -24,7 +24,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               <input
                 type="text"
                 id="certificate-id-empty"
-                placeholder="CERT-2026-001"
+                placeholder="CERT-2026-A7K9M2"
                 autocomplete="off"
                 spellcheck="false"
                 required
@@ -32,7 +32,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             </label>
             <button type="submit" class="btn">Verify Certificate →</button>
           </form>
-          <p class="hint">Contoh: <code>CERT-2026-001</code></p>
+          <p class="hint">Contoh: <code>CERT-2026-A7K9M2</code></p>
         </div>
       </div>
     </div>
@@ -627,7 +627,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <input
               type="text"
               id="certificate-id"
-              placeholder="CERT-2026-001"
+              placeholder="CERT-2026-A7K9M2"
               autocomplete="off"
               spellcheck="false"
               required
@@ -635,7 +635,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           </label>
           <button type="submit" class="btn">Verify Certificate →</button>
         </form>
-        <p class="hint">Contoh: <code>CERT-2026-001</code></p>
+        <p class="hint">Contoh: <code>CERT-2026-A7K9M2</code></p>
       </div>
     `;
     bindForm();
@@ -673,7 +673,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   function renderInvalidFormat(certId) {
     if (!resultEl) return;
     setPageTitle(`Invalid Certificate ID | Akim`);
-    setPageMetaDescription('Certificate ID tidak sesuai format CERT-YYYY-NNN.');
+    setPageMetaDescription('Certificate ID tidak sesuai format CERT-YYYY-XXXXXX.');
     resultEl.innerHTML = `
       <div class="result-wrap">
         <div class="status-card invalid">
@@ -683,7 +683,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <h2 class="status-title">Invalid Format</h2>
             <p class="status-desc">
               Certificate ID <strong>${escape(certId)}</strong> tidak sesuai format.
-              Format yang benar: <code>CERT-YYYY-NNN</code>.
+              Format yang benar: <code>CERT-YYYY-XXXXXX</code>.
             </p>
           </div>
         </div>
@@ -885,7 +885,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               <input
                 type="text"
                 id="certificate-id"
-                placeholder="CERT-2026-001"
+                placeholder="CERT-2026-A7K9M2"
                 autocomplete="off"
                 spellcheck="false"
                 required
@@ -1097,7 +1097,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   // VALIDATE FORMAT
   // ============================================
   function isValidFormat(id) {
-    return /^CERT-\d{4}-\d{3,}$/i.test(id);
+    return /^CERT-\d{4}-[A-Z0-9]{3,}$/i.test(id);
   }
 
   // ============================================
